@@ -51,7 +51,7 @@ const T = {
     uplink_sub: "live telemetry from api.github.com, drawn on a hand-rolled 3D globe",
     contact_big: "Want to talk systems, security, or games?",
     contact_sub: "Pick a channel. The terminal knows too: `sudo hire-marco`.",
-    credentials_sub: "14 Anthropic + 1 AWS",
+    credentials_sub: "Claude Certified Architect + 14 Anthropic + 1 AWS",
     skip: "Skip to content",
   },
   es: {
@@ -79,7 +79,7 @@ const T = {
     uplink_sub: "telemetria en vivo de api.github.com, dibujada en un globo 3D hecho a mano",
     contact_big: "Hablemos de sistemas, seguridad o videojuegos?",
     contact_sub: "Elige un canal. La terminal tambien lo sabe: `sudo hire-marco`.",
-    credentials_sub: "14 de Anthropic + 1 de AWS",
+    credentials_sub: "Claude Certified Architect + 14 de Anthropic + 1 de AWS",
     skip: "Saltar al contenido",
   },
 };
@@ -245,6 +245,11 @@ const PAPERS = [
   },
 ];
 
+const CERT_FEATURED = {
+  name: "Claude Certified Architect, Foundations",
+  url: "https://www.credly.com/badges/fd95a306-7355-400c-9d6f-9b4de91de9ab",
+};
+
 const CERTS = [
   "Building with the Claude API", "Claude Code in Action", "Claude 101", "Claude Code 101",
   "Claude Platform 101", "Intro to Model Context Protocol", "MCP: Advanced Topics",
@@ -306,7 +311,8 @@ const BOOT_LINES = [
   "[  OK  ] Starting service: zero-trust.d..... deny by default",
   "[  OK  ] Starting service: vertex-ai.d...... keyless / IAM",
   "[  OK  ] ACM publications found: 2",
-  "[  OK  ] Anthropic certifications: 14",
+  "[  OK  ] Claude Certified Architect.... foundations",
+  "[  OK  ] Anthropic certifications: 15",
   "[  OK  ] Pirate allegiance confirmed........ Seton Hall",
   "[  OK  ] Launching 3D voyage renderer....... three.js / WebGL",
   "[  OK  ] Satellite uplink acquired.......... api.github.com",
@@ -519,7 +525,7 @@ function buildNeofetch(): TLine[] {
     "degree:   b.s. computer science, gpa 3.8",
     "degree:   m.s. cybersecurity, gpa 4.0",
     "papers:   2 (acm iwspa / sat-cps)",
-    "certs:    14x anthropic, 1x aws",
+    "certs:    claude certified architect, 14x anthropic, 1x aws",
     "locale:   en_us + es_es (bilingual)",
     "motto:    deny by default, ship by friday",
   ];
@@ -1207,7 +1213,7 @@ export function PonceOS() {
   const earlier = EXPERIENCE.filter((e) => !FEATURED.has(e.id));
   const proof = [
     { n: "2", l: t.proof_papers }, { n: "4", l: t.proof_llm },
-    { n: "300+", l: t.proof_servers }, { n: "14", l: t.proof_certs },
+    { n: "300+", l: t.proof_servers }, { n: "15", l: t.proof_certs },
   ];
 
   return (
@@ -1387,6 +1393,7 @@ export function PonceOS() {
 
           <h3 className="pos-h3">{t.certs_h} <span className="pos-h3-note">{t.credentials_sub}</span></h3>
           <div className="pos-certs">
+            <a className="pos-cert featured" href={CERT_FEATURED.url} target="_blank" rel="noopener noreferrer">{CERT_FEATURED.name}</a>
             {CERTS.map((c) => <span key={c} className={`pos-cert${c.startsWith("AWS") ? " aws" : ""}`}>{c}</span>)}
           </div>
         </section>
