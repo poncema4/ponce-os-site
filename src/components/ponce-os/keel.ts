@@ -114,7 +114,7 @@ const RULES: Array<{ match: RegExp; reply: string[] }> = [
   },
   {
     match: /cert|credential|claude|anthropic|aws/,
-    reply: ["14 anthropic certifications + aws cloud foundations, all listed in [06].", "the captain studies the tools before he trusts them. zero trust, remember."],
+    reply: ["claude certified architect (foundations) + 14 anthropic course certifications + aws cloud foundations, all listed in [06].", "the captain studies the tools before he trusts them. zero trust, remember."],
   },
   {
     match: /who are (you|u)|what are you|about you|yourself/,

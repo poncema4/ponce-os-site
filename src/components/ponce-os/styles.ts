@@ -248,6 +248,8 @@ html { scroll-behavior: smooth; }
 .pos-cert { font-size: 13px; color: var(--txt); border: 1px solid var(--line); background: var(--panel); padding: 7px 14px; border-radius: 999px; transition: border-color .2s; }
 .pos-cert:hover { border-color: var(--green); }
 .pos-cert.aws { border-color: rgba(244,184,96,.45); color: var(--amber-hi); }
+.pos-cert.featured { border-color: var(--green); color: var(--txt); font-weight: 700; text-decoration: none; }
+.pos-cert.featured:hover { background: var(--panel-2); }
 
 /* ================= contact: the treasure ================= */
 .pos-contact { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px 48px; align-items: center; }
