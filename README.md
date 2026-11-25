@@ -39,8 +39,8 @@ left for visitors to find.
 ```
 src/
   main.tsx                entry
-  App.tsx                 router (/, /cyber, 404)
-  pages/                  Index (mounts PonceOS), Cyber (the news page), NotFound
+  App.tsx                 router (/, 404)
+  pages/                  Index (mounts PonceOS), NotFound
   components/PonceOS.tsx  the entire experience: data, terminal, sections, styles
 public/
   Marco_Ponce_Resume.pdf  served by the `resume` command
@@ -49,27 +49,6 @@ public/
 The whole site is intentionally one self-contained component. Previous designs
 live in git history (tag `stable-before-experiments` and earlier commits) rather
 than as dead code in the tree.
-
-## Cyber Brief (`/cyber`)
-
-A news page for cybersecurity and AI (breaches, threats, new models, trends), newest first, 20 per
-page, at most 100 pages, searchable, with a page-number box in the pager.
-
-```
-Vercel edge function                       Browser
-api/cyber-brief.ts (live feeds)   ->   src/pages/Cyber.tsx
-                                        list, search, pager
-```
-
-- **Sources** are a fixed allowlist in `api/_lib/brief.ts`. One feed being down never breaks the
-  page. Anthropic publishes no feed, so that one is a community-generated mirror and is labelled as such.
-- **No scheduled jobs.** The page is built from live feeds on each request and cached at Vercel's
-  edge for 10 minutes. Nothing in this repo commits or runs on a timer. An optional archive can be
-  plugged in by setting `NEWS_ARCHIVE_URL` to a hosted `news.json`; `scripts/news-archive.ts` builds
-  one by hand: `npx tsx scripts/news-archive.ts /tmp/news.json`.
-- **Badges**: NEW MODEL (a lab announces a model), ALERT (actively exploited / breach), NEW (since your
-  last visit, kept in this browser only). No visitor data is sent anywhere.
-- Only titles, short excerpts and links are kept; every story links to the original.
 
 ## Development
 
