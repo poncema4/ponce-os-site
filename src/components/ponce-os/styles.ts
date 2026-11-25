@@ -13,7 +13,6 @@
 import { FISHING_CSS } from "./fishing";
 import { LOG_CSS } from "./captains-log";
 import { PALETTE_CSS } from "./palette";
-import { CYBER_CSS } from "./cyber-brief";
 
 export const CSS = `
 @font-face { font-family: "Newsreader"; font-style: normal; font-weight: 200 800; font-display: swap;
@@ -371,5 +370,4 @@ body.pos-dragging, body.pos-dragging * { user-select: none !important; -webkit-u
 ${FISHING_CSS}
 ${LOG_CSS}
 ${PALETTE_CSS}
-${CYBER_CSS}
 `;
