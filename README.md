@@ -56,27 +56,20 @@ A news page for cybersecurity and AI (breaches, threats, new models, trends), ne
 page, at most 100 pages, searchable, with a page-number box in the pager.
 
 ```
-GitHub Action (every 30 min)          Vercel edge function              Browser
-scripts/news-archive.ts  ->  news.json on   ->  api/cyber-brief.ts  ->  src/pages/Cyber.tsx
-fetch all feeds, merge       branch news-data   archive + live feeds     list, search, pager
+Vercel edge function                       Browser
+api/cyber-brief.ts (live feeds)   ->   src/pages/Cyber.tsx
+                                        list, search, pager
 ```
 
-- **Sources** are a fixed allowlist in `api/_lib/brief.ts` (CISA advisories and KEV, BleepingComputer,
-  The Hacker News, Krebs, Dark Reading, Schneier, SANS ISC, OpenAI news, Anthropic, Claude Code
-  releases, Hugging Face, Google DeepMind, TechCrunch AI, MIT Technology Review). One feed being down
-  never breaks the page. Anthropic publishes no feed, so that one is a community-generated mirror
-  and is labelled as such on the page.
-- **Storage** is `news.json` on the `news-data` branch (created by the first workflow run), kept to
-  the newest 2,000 stories. The endpoint merges it with live feeds so the page is fresh even if a run is late.
+- **Sources** are a fixed allowlist in `api/_lib/brief.ts`. One feed being down never breaks the
+  page. Anthropic publishes no feed, so that one is a community-generated mirror and is labelled as such.
+- **No scheduled jobs.** The page is built from live feeds on each request and cached at Vercel's
+  edge for 10 minutes. Nothing in this repo commits or runs on a timer. An optional archive can be
+  plugged in by setting `NEWS_ARCHIVE_URL` to a hosted `news.json`; `scripts/news-archive.ts` builds
+  one by hand: `npx tsx scripts/news-archive.ts /tmp/news.json`.
 - **Badges**: NEW MODEL (a lab announces a model), ALERT (actively exploited / breach), NEW (since your
   last visit, kept in this browser only). No visitor data is sent anywhere.
 - Only titles, short excerpts and links are kept; every story links to the original.
-- Cost and upkeep: free (public repo, about 20 seconds of Actions every 30 minutes). GitHub pauses
-  scheduled workflows after 60 days with no activity in the repo; push anything, or run
-  `gh workflow run news-archive.yml`, to wake it. A failed run never emails you (the steps
-  are `continue-on-error`); a stuck archive shows as an old "newest story added" line on the page.
-- To add a source, add one line to `SOURCES` and a test; to run the archive by hand:
-  `npx tsx scripts/news-archive.ts /tmp/news.json`.
 
 ## Development
 

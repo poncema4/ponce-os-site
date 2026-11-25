@@ -233,6 +233,7 @@ describe("highlights", () => {
   });
   it("the endpoint sends them on the plain first page only", async () => {
     const flagged = Array.from({ length: 25 }, (_, n) => item({ url: `https://arch.test/h${n}`, title: n === 0 ? "Introducing GPT-9 Story" : `Story ${n}`, source: "OpenAI", topic: "ai", published: Date.now() - (n + 1) * 3_600_000 }));
+    vi.stubEnv("NEWS_ARCHIVE_URL", "https://archive.test/news-data/news.json");
     vi.stubGlobal("fetch", async (u: string) =>
       String(u).includes("news-data") ? new Response(JSON.stringify({ version: 1, updated: Date.now(), items: flagged })) : new Response("down", { status: 500 }));
     const get = async (qs: string) => (await handler(new Request(`https://x.test/api/cyber-brief${qs}`))).json();
@@ -240,6 +241,7 @@ describe("highlights", () => {
     expect((await get("?page=2")).highlights).toEqual([]);
     expect((await get("?q=story")).highlights).toEqual([]);
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 });
 
@@ -312,16 +314,26 @@ describe("collectLive", () => {
 });
 
 describe("endpoint", () => {
-  afterEach(() => vi.unstubAllGlobals());
+  afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
   const archiveItems = Array.from({ length: 30 }, (_, n) => item({ url: `https://arch.test/${n}`, title: `Archived ${n}`, published: Date.now() - (n + 1) * 3_600_000 }));
   function stub(archive: unknown, archiveStatus = 200) {
+    vi.stubEnv("NEWS_ARCHIVE_URL", "https://archive.test/news-data/news.json");
     vi.stubGlobal("fetch", async (u: string) =>
-      String(u).includes("raw.githubusercontent.com/poncema4/ponce-os/news-data")
+      String(u) === "https://archive.test/news-data/news.json"
         ? new Response(JSON.stringify(archive), { status: archiveStatus })
         : new Response("down", { status: 500 }));
   }
   const get = (q = "") => handler(new Request(`https://x.test/api/cyber-brief${q}`));
 
+  it("runs on live feeds alone when no archive is configured (no archive fetch, no archive-only sources)", async () => {
+    const urls: string[] = [];
+    vi.stubGlobal("fetch", async (u: string) => { urls.push(String(u)); return new Response("down", { status: 500 }); });
+    const body = await (await get()).json();
+    expect(body.archive.ok).toBe(false);
+    expect(urls.some((u) => u.includes("news-data") || u.includes("news.json"))).toBe(false);
+    expect(body.sources.some((s: { note?: string }) => s.note === "updated by the archive job")).toBe(false);
+    expect(isBriefPage(body)).toBe(true);
+  });
   it("rejects non-GET without touching the network", async () => {
     const res = await handler(new Request("https://x.test/api/cyber-brief", { method: "POST" }));
     expect(res.status).toBe(405);
