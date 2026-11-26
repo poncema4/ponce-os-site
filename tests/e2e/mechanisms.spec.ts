@@ -19,7 +19,7 @@ test.describe("terminal: every command", () => {
     ["ls", /terminal\/\s+service-log\/\s+case-files\/\s+uplink\/\s+research\/\s+credentials\/\s+contact\/[\s\S]*arcova\.txt\s+papers\.bib\s+motd/i],
     ["ls projects", /CF-001\s+PirateFlow[\s\S]*CF-006\s+TenantE/i],
     ["ls -a", /\.kraken/i],
-    ["cat arcova.txt", /shipped a full-stack ai platform/i],
+    ["cat arcova.txt", /drove an ai platform to production/i],
     ["cat motd", /deny by default, ship by friday/i],
     // real BibTeX for both ACM papers: two entries, each with its own DOI, braces balanced
     ["cat papers.bib", /@inproceedings\{[\s\S]*RiskCast[\s\S]*doi\s*=\s*\{10\.1145\/3806007\.3810965\}[\s\S]*@inproceedings\{[\s\S]*BBKR[\s\S]*doi\s*=\s*\{10\.1145\/3806008\.3811702\}/i],
@@ -421,10 +421,10 @@ test.describe("content and links", () => {
     expect(metrics.join(" ")).toMatch(/95%/);
   });
 
-  test("research (2 papers) and credentials (14 + 1) are all there", async ({ page }) => {
+  test("research (2 papers) and credentials (1 + 14 + 1) are all there", async ({ page }) => {
     await boot(page);
     await expect(page.locator(".pos-paper")).toHaveCount(2);
-    await expect(page.locator(".pos-cert")).toHaveCount(15);
+    await expect(page.locator(".pos-cert")).toHaveCount(16);
     await expect(page.locator(".pos-cert.aws")).toHaveCount(1);
   });
 
